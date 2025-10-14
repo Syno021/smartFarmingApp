@@ -1,98 +1,320 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { AlertCard } from '@/components/ui/alert-card';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { IconSymbol } from '@/components/ui/icon-symbol';
+import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View>
+            <Text style={[styles.greeting, { color: colors.textSecondary }]}>Sawubona 👋</Text>
+            <Text style={[styles.title, { color: colors.text }]}>Welcome Back, Farmer</Text>
+          </View>
+          <TouchableOpacity style={[styles.languageButton, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <IconSymbol name="globe" size={20} color={colors.icon} />
+            <Text style={[styles.languageText, { color: colors.text }]}>EN</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Weather Card */}
+        <Card style={styles.weatherCard}>
+          <View style={styles.weatherHeader}>
+            <View>
+              <Text style={[styles.weatherLocation, { color: colors.textSecondary }]}>KwaZulu-Natal</Text>
+              <Text style={[styles.weatherTemp, { color: colors.text }]}>24°C</Text>
+            </View>
+            <View style={[styles.weatherIcon, { backgroundColor: colors.secondary + '20' }]}>
+              <IconSymbol name="sun.max.fill" size={40} color={colors.secondary} />
+            </View>
+          </View>
+          <View style={styles.weatherDetails}>
+            <View style={styles.weatherItem}>
+              <IconSymbol name="drop.fill" size={16} color={colors.accent} />
+              <Text style={[styles.weatherItemText, { color: colors.textSecondary }]}>60% Humidity</Text>
+            </View>
+            <View style={styles.weatherItem}>
+              <IconSymbol name="wind" size={16} color={colors.accent} />
+              <Text style={[styles.weatherItemText, { color: colors.textSecondary }]}>12 km/h Wind</Text>
+            </View>
+          </View>
+        </Card>
+
+        {/* Active Alerts */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Active Alerts</Text>
+          <AlertCard 
+            title="Rain Expected Tomorrow"
+            message="Heavy rain predicted. Your tomatoes may be at risk of early blight. Apply preventive treatment today."
+            severity="warning"
+          />
+          <AlertCard 
+            title="Harvest Ready"
+            message="Your maize crop is ready for harvest based on planting date (90 days ago)."
+            severity="success"
+          />
+        </View>
+
+        {/* Quick Stats */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Farm Overview</Text>
+          <View style={styles.statsGrid}>
+            <Card style={styles.statCard}>
+              <IconSymbol name="leaf.fill" size={32} color={colors.primary} />
+              <Text style={[styles.statNumber, { color: colors.text }]}>5</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Active Crops</Text>
+            </Card>
+            <Card style={styles.statCard}>
+              <IconSymbol name="calendar" size={32} color={colors.secondary} />
+              <Text style={[styles.statNumber, { color: colors.text }]}>12</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Days to Harvest</Text>
+            </Card>
+            <Card style={styles.statCard}>
+              <IconSymbol name="chart.line.uptrend.xyaxis" size={32} color={colors.success} />
+              <Text style={[styles.statNumber, { color: colors.text }]}>85%</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Health Score</Text>
+            </Card>
+            <Card style={styles.statCard}>
+              <IconSymbol name="dollarsign.circle.fill" size={32} color={colors.info} />
+              <Text style={[styles.statNumber, { color: colors.text }]}>3</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Market Offers</Text>
+            </Card>
+          </View>
+        </View>
+
+        {/* Recent Crops */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>My Crops</Text>
+            <TouchableOpacity>
+              <Text style={[styles.seeAllText, { color: colors.primary }]}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <Card style={styles.cropCard}>
+            <View style={styles.cropHeader}>
+              <View>
+                <Text style={[styles.cropName, { color: colors.text }]}>🌽 Maize</Text>
+                <Text style={[styles.cropDate, { color: colors.textSecondary }]}>Planted 85 days ago</Text>
+              </View>
+              <Badge label="Mature" variant="success" />
+            </View>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { backgroundColor: colors.success, width: '95%' }]} />
+            </View>
+            <Text style={[styles.cropInfo, { color: colors.textSecondary }]}>Expected harvest in 5 days</Text>
+          </Card>
+
+          <Card style={styles.cropCard}>
+            <View style={styles.cropHeader}>
+              <View>
+                <Text style={[styles.cropName, { color: colors.text }]}>🍅 Tomatoes</Text>
+                <Text style={[styles.cropDate, { color: colors.textSecondary }]}>Planted 45 days ago</Text>
+              </View>
+              <Badge label="Growing" variant="info" />
+            </View>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { backgroundColor: colors.info, width: '60%' }]} />
+            </View>
+            <Text style={[styles.cropInfo, { color: colors.textSecondary }]}>Expected harvest in 30 days</Text>
+          </Card>
+        </View>
+
+        {/* Quick Actions */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Quick Actions</Text>
+          <View style={styles.actionsGrid}>
+            <TouchableOpacity style={[styles.actionButton, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <IconSymbol name="plus.circle.fill" size={28} color={colors.primary} />
+              <Text style={[styles.actionText, { color: colors.text }]}>Add Crop</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.actionButton, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <IconSymbol name="message.fill" size={28} color={colors.accent} />
+              <Text style={[styles.actionText, { color: colors.text }]}>Ask Assistant</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.actionButton, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <IconSymbol name="camera.fill" size={28} color={colors.secondary} />
+              <Text style={[styles.actionText, { color: colors.text }]}>Scan Disease</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.actionButton, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <IconSymbol name="person.2.fill" size={28} color={colors.success} />
+              <Text style={[styles.actionText, { color: colors.text }]}>Community</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 100,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  greeting: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+  },
+  languageButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    gap: 6,
   },
-  stepContainer: {
-    gap: 8,
+  languageText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  weatherCard: {
+    marginBottom: 20,
+  },
+  weatherHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  weatherLocation: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  weatherTemp: {
+    fontSize: 36,
+    fontWeight: 'bold',
+  },
+  weatherIcon: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  weatherDetails: {
+    flexDirection: 'row',
+    gap: 20,
+  },
+  weatherItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  weatherItemText: {
+    fontSize: 14,
+  },
+  section: {
+    marginBottom: 24,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  seeAllText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  statCard: {
+    flex: 1,
+    minWidth: '45%',
+    alignItems: 'center',
+    padding: 20,
+  },
+  statNumber: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginTop: 8,
+  },
+  statLabel: {
+    fontSize: 12,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  cropCard: {
+    marginBottom: 12,
+  },
+  cropHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  cropName: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  cropDate: {
+    fontSize: 14,
+  },
+  progressBar: {
+    height: 6,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 3,
+    overflow: 'hidden',
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  progressFill: {
+    height: '100%',
+    borderRadius: 3,
+  },
+  cropInfo: {
+    fontSize: 12,
+  },
+  actionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  actionButton: {
+    flex: 1,
+    minWidth: '45%',
+    alignItems: 'center',
+    padding: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 8,
+  },
+  actionText: {
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });
