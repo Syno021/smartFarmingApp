@@ -1,10 +1,10 @@
 import { Badge } from '@/components/ui/badge';
+import { TAB_BAR_HEIGHT } from '@/components/ui/custom-tab-bar';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Language = 'en' | 'zu' | 'xh' | 'af';
 type Message = {
@@ -67,7 +67,7 @@ export default function AssistantScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
       <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <View>
@@ -112,7 +112,7 @@ export default function AssistantScreen() {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
       >
         {/* Messages */}
-        <ScrollView contentContainerStyle={styles.messagesContainer}>
+        <ScrollView contentContainerStyle={[styles.messagesContainer, { paddingBottom: 16 + TAB_BAR_HEIGHT }]}>
           {/* Quick Questions */}
           <View style={styles.quickQuestionsSection}>
             <Text style={[styles.quickQuestionsTitle, { color: colors.textSecondary }]}>
@@ -203,7 +203,7 @@ export default function AssistantScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -263,7 +263,6 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     padding: 16,
-    paddingBottom: 100,
   },
   quickQuestionsSection: {
     marginBottom: 24,

@@ -1,21 +1,21 @@
 import { AlertCard } from '@/components/ui/alert-card';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { TAB_BAR_HEIGHT } from '@/components/ui/custom-tab-bar';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Fixed Header */}
+      <View style={[styles.headerWrapper, { backgroundColor: colors.background }]}>
         <View style={styles.header}>
           <View>
             <Text style={[styles.greeting, { color: colors.textSecondary }]}>Sawubona 👋</Text>
@@ -26,6 +26,12 @@ export default function HomeScreen() {
             <Text style={[styles.languageText, { color: colors.text }]}>EN</Text>
           </TouchableOpacity>
         </View>
+      </View>
+
+      <ScrollView 
+        style={styles.flex}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: 16 + TAB_BAR_HEIGHT }]}
+      >
 
         {/* Weather Card */}
         <Card style={styles.weatherCard}>
@@ -153,7 +159,7 @@ export default function HomeScreen() {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -161,9 +167,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  flex: {
+    flex: 1,
+  },
+  headerWrapper: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
   scrollContent: {
-    padding: 16,
-    paddingBottom: 100,
+    paddingHorizontal: 16,
+    paddingTop: 12,
   },
   header: {
     flexDirection: 'row',
